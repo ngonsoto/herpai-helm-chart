@@ -1,0 +1,20 @@
+# Ignore build artifacts
+*.tgz
+index.yaml
+
+# Ignore temporary files
+*.lock
+.DS_Store
+*.swp
+*.bak
+*.tmp
+
+# Ignore Helm debug files
+charts/
+templates/*.tpl
+
+# Ignore editor/IDE files
+.vscode/
+.idea/
+*.log
+node_modules/
