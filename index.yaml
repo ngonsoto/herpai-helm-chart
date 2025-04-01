@@ -3,7 +3,7 @@ entries:
   herpai-chart:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-03-31T20:55:27.398610788-03:00"
+    created: "2025-03-31T21:09:00.717825276-03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -17,6 +17,6 @@ entries:
     name: herpai-chart
     type: application
     urls:
-    - https://ngonsoto.github.io/herpai-helm-charts/herpai-chart-0.1.1.tgz
+    - https://ngonsoto.github.io/herpai-helm-chart/charts/herpai-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2025-03-31T20:55:27.378138635-03:00"
+generated: "2025-03-31T21:09:00.698098225-03:00"
