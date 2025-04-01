@@ -1,0 +1,22 @@
+apiVersion: v1
+entries:
+  herpai-chart:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2025-03-31T20:55:27.398610788-03:00"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    - name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.0.0
+    description: A Helm chart for deploying HerpAI python app with PostgreSQL and
+      MinIO
+    digest: c9d227a746e169b0389f1a384d14a7c2a27bfb1d77774b6b055ab7bceff25727
+    name: herpai-chart
+    type: application
+    urls:
+    - https://ngonsoto.github.io/herpai-helm-charts/herpai-chart-0.1.1.tgz
+    version: 0.1.1
+generated: "2025-03-31T20:55:27.378138635-03:00"
