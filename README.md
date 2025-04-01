@@ -21,7 +21,7 @@ helm repo update
 ### 3. Install the HerpAI chart to your cluster
 
 ```bash
-helm install herpai herpai-charts/herpai-chart
+helm install herpai herpai-chart/herpai-chart
 ```
 
 ### 4. Get the app IP and port
