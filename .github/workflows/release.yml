@@ -108,7 +108,7 @@ jobs:
         run: |
           CHART_PACKAGE_PATH="${{ steps.package.outputs.package_name }}"
           # Move the packaged chart to the gh-pages checkout directory
-          mv "$CHART_PACKAGE_PATH" ./gh-pages/
+          mv "$CHART_PACKAGE_PATH" ./gh-pages/charts
 
           # Index the repository
           helm repo index ./gh-pages --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }} --merge ./gh-pages/index.yaml
