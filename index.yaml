@@ -3,7 +3,7 @@ entries:
   herpai-app:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T19:42:12.555201727Z"
+    created: "2025-04-03T19:44:15.147957102Z"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -20,7 +20,24 @@ entries:
     version: 0.1.4
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T19:42:12.545952599Z"
+    created: "2025-04-03T19:44:15.173791186Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    - name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.0.0
+    description: HerpAI python app with PostgreSQL and MinIO
+    digest: 28823a1447b0191bd8c4abc907beee9684d66c66d13c407b8644bb44c680bd71
+    name: herpai-app
+    type: application
+    urls:
+    - https://ngonsoto.github.io/herpai-helm-chart/charts/herpai-app-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2025-04-03T19:44:15.1388679Z"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -37,7 +54,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T19:42:12.571671041Z"
+    created: "2025-04-03T19:44:15.164660938Z"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -54,7 +71,7 @@ entries:
     version: 0.1.3
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T19:42:12.563663248Z"
+    created: "2025-04-03T19:44:15.156948922Z"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -72,7 +89,7 @@ entries:
   herpai-chart:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T19:42:12.580337546Z"
+    created: "2025-04-03T19:44:15.182433682Z"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -88,4 +105,4 @@ entries:
     urls:
     - https://ngonsoto.github.io/herpai-helm-chart/charts/herpai-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2025-04-03T19:42:12.536784621Z"
+generated: "2025-04-03T19:44:15.129296329Z"
