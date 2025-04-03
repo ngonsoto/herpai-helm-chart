@@ -1,27 +1,128 @@
-name: Release Charts
+name: Release Helm Chart
 
 on:
   push:
     branches:
-      - main
+      - main # Or the branch Flux commits to
+    # Optional: Only run if chart-related files change
+    # paths:
+    #  - 'charts/my-app/**' # Adjust path to your chart source
+    #  - 'Chart.yaml' # If Chart.yaml is outside the chart dir
+
+# Prevent concurrent workflow runs on the same branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   release:
-    permissions:
-      contents: write
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to push to gh-pages branch
+
     steps:
-      - name: Checkout
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          ref: main # Checkout the branch that triggered the workflow
+          fetch-depth: 0 # Need full history for commit message check
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3 # Or any action that provides Helm
+        with:
+          version: 'latest' # Use latest or pin to a specific version
+
+      - name: Set up yq
+        uses: mikefarah/yq@v4.43.1 # Use latest or pin to a specific version
+        # Installs yq for YAML processing (optional version bump)
 
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
+      # --- Optional: Auto-bump patch version if triggered by Flux ---
+      - name: Auto-bump chart version (optional)
+        id: bump_version
+        run: |
+          # --- Configuration ---
+          CHART_YAML_PATH="herpai-chart/Chart.yaml" # Adjust if Chart.yaml is in a subdir e.g., charts/my-app/Chart.yaml
+          FLUX_COMMIT_MSG_PATTERN="Automated image update by Flux" # The start of Flux's commit message
+          # --- Logic ---
+          LATEST_COMMIT_MSG=$(git log -1 --pretty=%B)
+          echo "Latest commit message: $LATEST_COMMIT_MSG"
+
+          if [[ "$LATEST_COMMIT_MSG" == *"$FLUX_COMMIT_MSG_PATTERN"* ]]; then
+            echo "Flux commit detected. Attempting to bump patch version..."
+            CURRENT_VERSION=$(yq e '.version' $CHART_YAML_PATH)
+            # Basic semver bump (requires version format like X.Y.Z)
+            # Using awk for simplicity, adjust if needed for more complex versions
+            NEW_VERSION=$(echo $CURRENT_VERSION | awk -F. -v OFS=. '{$NF++; print}')
+
+            echo "Current version: $CURRENT_VERSION, New version: $NEW_VERSION"
+            # Update Chart.yaml in the checked-out code
+            yq e ".version = \"$NEW_VERSION\"" -i $CHART_YAML_PATH
+            echo "chart_version=$NEW_VERSION" >> $GITHUB_OUTPUT
+            echo "version_bumped=true" >> $GITHUB_OUTPUT
+
+            # Commit the version bump back to main to avoid re-bumping next time
+            # IMPORTANT: Use [ci skip] to prevent triggering this workflow again!
+            git add $CHART_YAML_PATH
+            # Check if there are staged changes before committing
+            if ! git diff --staged --quiet; then
+              git commit -m "Bump chart version to $NEW_VERSION [ci skip]"
+              git push origin main
+              echo "Committed version bump back to main branch."
+            else
+              echo "No changes to Chart.yaml detected after version bump attempt."
+            fi
+          else
+            echo "Not a Flux commit or pattern not matched. Using existing chart version."
+            EXISTING_VERSION=$(yq e '.version' $CHART_YAML_PATH)
+            echo "chart_version=$EXISTING_VERSION" >> $GITHUB_OUTPUT
+            echo "version_bumped=false" >> $GITHUB_OUTPUT
+          fi
         env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Package Helm Chart
+        id: package
+        run: |
+          CHART_PATH="./herpai-chart" # Adjust to the directory containing Chart.yaml e.g., ./charts/my-app
+          helm dependency update $CHART_PATH # Update dependencies if any
+          helm lint $CHART_PATH
+          PACKAGE_OUTPUT=$(helm package $CHART_PATH --destination charts)
+          PACKAGE_NAME=$(echo "$PACKAGE_OUTPUT" | sed -n 's/Successfully packaged chart and saved it to: //p')
+          echo "Packaged chart: $PACKAGE_NAME"
+          echo "package_name=$PACKAGE_NAME" >> $GITHUB_OUTPUT
+        # Create directory if it doesn't exist
+        working-directory: ${{ github.workspace }} # Ensure helm package runs from workspace root or adjust CHART_PATH
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages # Branch served by GitHub Pages
+          path: ./gh-pages # Checkout to a specific directory
+
+      - name: Update Helm repo index
+        run: |
+          CHART_PACKAGE_PATH="${{ steps.package.outputs.package_name }}"
+          # Move the packaged chart to the gh-pages checkout directory
+          mv "$CHART_PACKAGE_PATH" ./gh-pages/
+
+          # Index the repository
+          helm repo index ./gh-pages --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }} --merge ./gh-pages/index.yaml
+
+      - name: Commit and Push changes to gh-pages
+        run: |
+          cd ./gh-pages
+          git add .
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to Helm index or chart packages."
+            exit 0
+          fi
+          git commit -m "Publish Helm chart version ${{ steps.bump_version.outputs.chart_version }}"
+          git push origin gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
