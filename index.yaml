@@ -3,7 +3,7 @@ entries:
   herpai-app:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T02:29:22.990676412-03:00"
+    created: "2025-04-03T02:32:32.095511018-03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -12,7 +12,24 @@ entries:
       repository: https://charts.bitnami.com/bitnami
       version: 16.0.0
     description: HerpAI python app with PostgreSQL and MinIO
-    digest: fbecd3d13a42dbfe2c431de57bb334465b90d592af92dc91d71b26410ba4eddf
+    digest: 1841354e0ac865adca5ea0f24afa15c7329f37d987b760caf0b65fff3c89cf41
+    name: herpai-app
+    type: application
+    urls:
+    - https://ngonsoto.github.io/herpai-helm-chart/charts/herpai-app-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2025-04-03T02:32:32.089355172-03:00"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.6.0
+    - name: minio
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.0.0
+    description: HerpAI python app with PostgreSQL and MinIO
+    digest: 212afde2ed14503b2f480a76c13eb717a2370579a9a0474153cc62e9c2325e2c
     name: herpai-app
     type: application
     urls:
@@ -21,7 +38,7 @@ entries:
   herpai-chart:
   - apiVersion: v2
     appVersion: 0.1.0
-    created: "2025-04-03T02:29:22.997893067-03:00"
+    created: "2025-04-03T02:32:32.102508071-03:00"
     dependencies:
     - name: postgresql
       repository: https://charts.bitnami.com/bitnami
@@ -37,4 +54,4 @@ entries:
     urls:
     - https://ngonsoto.github.io/herpai-helm-chart/charts/herpai-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2025-04-03T02:29:22.98375926-03:00"
+generated: "2025-04-03T02:32:32.081018108-03:00"
