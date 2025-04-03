@@ -10,7 +10,7 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion. Comment added for Flux Image Automation Controller
-  tag: "ghcr.io/ngonsoto/herpai-app:v0.1.2" # {"$imagepolicy": "herpai-app:herpai-app-policy"}
+  tag: "ghcr.io/ngonsoto/herpai-app:v0.1.3" # {"$imagepolicy": "herpai-app:herpai-app-policy"}
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
 # This is to override the chart name.
